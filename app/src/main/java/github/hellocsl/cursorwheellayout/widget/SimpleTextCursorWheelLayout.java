@@ -27,7 +27,7 @@ public class SimpleTextCursorWheelLayout extends CursorWheelLayout {
             return;
         }
         View tv = v.findViewById(R.id.wheel_menu_item_tv);
-        tv.animate().scaleX(2).scaleY(2);
+        tv.animate().scaleX(1.5f).scaleY(1.5f);
     }
 
 

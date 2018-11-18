@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements CursorWheelLayout
     }
 
     private void initData() {
-        String[] res = new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "OFF"};
+        String[] res = new String[]{"1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月","11月","12月"};
         List<MenuItemData> menuItemDatas = new ArrayList<MenuItemData>();
         for (int i = 0; i < res.length; i++) {
             menuItemDatas.add(new MenuItemData(res[i]));
@@ -50,9 +50,24 @@ public class MainActivity extends AppCompatActivity implements CursorWheelLayout
         SimpleTextAdapter simpleTextAdapter = new SimpleTextAdapter(this, menuItemDatas, Gravity.TOP | Gravity.CENTER_HORIZONTAL);
         mTestCircleMenuLeft.setAdapter(simpleTextAdapter);
         mTestCircleMenuLeft.setOnMenuSelectedListener(this);
+
+
+
+
+
+
+
+
+
+
+
+
+
         SimpleTextAdapter simpleTextAdapter2 = new SimpleTextAdapter(this, menuItemDatas, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
         mTestCircleMenuRight.setAdapter(simpleTextAdapter2);
         mTestCircleMenuRight.setOnMenuSelectedListener(this);
+
+
         List<ImageData> imageDatas = new ArrayList<ImageData>();
         imageDatas.add(new ImageData(R.drawable.ic_bank_bc, "0"));
         imageDatas.add(new ImageData(R.drawable.ic_bank_china, "1"));

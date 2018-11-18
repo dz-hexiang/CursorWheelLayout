@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -26,16 +27,16 @@ import android.view.WindowManager;
  * The base cycle wheel menu layout with cursor
  *
  * @author chensuilun
- * @attr  R.styleable.CursorWheelLayout_wheelSelectedAngle
- * @attr  R.styleable.CursorWheelLayout_wheelPaddingRadio
- * @attr  R.styleable.CursorWheelLayout_wheelCenterRadio
- * @attr  R.styleable.CursorWheelLayout_wheelItemRadio
- * @attr  R.styleable.CursorWheelLayout_wheelFlingValue
- * @attr  R.styleable.CursorWheelLayout_wheelCursorColor
- * @attr  R.styleable.CursorWheelLayout_wheelCursorHeight
- * @attr  R.styleable.CursorWheelLayout_wheelItemRotateMode
- * @attr  R.styleable.CursorWheelLayout_wheelGuideLineWidth
- * @attr  R.styleable.CursorWheelLayout_wheelGuideLineColor
+ * @attr R.styleable.CursorWheelLayout_wheelSelectedAngle
+ * @attr R.styleable.CursorWheelLayout_wheelPaddingRadio
+ * @attr R.styleable.CursorWheelLayout_wheelCenterRadio
+ * @attr R.styleable.CursorWheelLayout_wheelItemRadio
+ * @attr R.styleable.CursorWheelLayout_wheelFlingValue
+ * @attr R.styleable.CursorWheelLayout_wheelCursorColor
+ * @attr R.styleable.CursorWheelLayout_wheelCursorHeight
+ * @attr R.styleable.CursorWheelLayout_wheelItemRotateMode
+ * @attr R.styleable.CursorWheelLayout_wheelGuideLineWidth
+ * @attr R.styleable.CursorWheelLayout_wheelGuideLineColor
  */
 public class CursorWheelLayout extends ViewGroup {
     private static final String TAG = "CircleMenuLayout";
@@ -288,6 +289,7 @@ public class CursorWheelLayout extends ViewGroup {
 
     private void init(Context context) {
         setWillNotDraw(false);
+        //三角箭头颜色
         mCursorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mCursorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mCursorPaint.setColor(mCursorColor);
@@ -381,8 +383,19 @@ public class CursorWheelLayout extends ViewGroup {
         mTrianglePath.lineTo(layoutRadial, 0 - mTriangleHeight / 2.0f);
         mTrianglePath.lineTo(layoutRadial, 0 + mTriangleHeight / 2.0f);
         mTrianglePath.close();
+
+
     }
 
+    private void initArcIndicatorPath() {
+        int layoutRadial = (int) (mRootDiameter / 2.0);
+        mTrianglePath.moveTo(layoutRadial - mTriangleHeight, 0);
+        mTrianglePath.lineTo(layoutRadial, 0 - mTriangleHeight / 2.0f);
+        mTrianglePath.lineTo(layoutRadial, 0 + mTriangleHeight / 2.0f);
+        mTrianglePath.close();
+
+
+    }
 
     /**
      * @param mOnMenuItemClickListener
@@ -497,13 +510,30 @@ public class CursorWheelLayout extends ViewGroup {
         }
     }
 
+    //白色月份圆环边框路径
+    Path mOutsideBorderPath = new Path();
+    //圆环边框粗细
+    float mOutsideBorderWidth = 80f;
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mBgMatrix.reset();
-        initTriangle();
+//        initTriangle();
+        initArcIndicatorPath();
         int radial = (int) (mRootDiameter / 2.0f);
         mWheelBgPath.addCircle(0, 0, radial, Path.Direction.CW);
+        mOutsideBorderPath.addCircle(0, 0, radial - mOutsideBorderWidth / 2, Path.Direction.CW);
+
+
+//        mInSideCicle.addCircle(0, 0, radial-50, Path.Direction.CW);
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            mWheelBgPath.op(mInSideCicle, Path.Op.UNION);
+//        }
+//
+//        //新增的
+//        mWheelBgPath.addCircle(0, 0, radial-80, Path.Direction.CW);
     }
 
     @Override
@@ -523,18 +553,32 @@ public class CursorWheelLayout extends ViewGroup {
         if (mBgMatrix.isIdentity()) {
             canvas.getMatrix().invert(mBgMatrix);
         }
-        canvas.drawPath(mWheelBgPath, mWheelPaint);
+
+        drawOutSideCircle(canvas);
+    }
+
+    /**
+     * 画外环
+     * @param canvas
+     */
+    private void drawOutSideCircle(Canvas canvas) {
+        //设置圆环的颜色
+        new Paint(Paint.ANTI_ALIAS_FLAG);
+        mWheelPaint.setStyle(Paint.Style.STROKE);
+        mWheelPaint.setColor(mWheelBgColor);
+        mWheelPaint.setDither(true);
+        //圆环粗细
+        mWheelPaint.setStrokeWidth(mOutsideBorderWidth);
+        mWheelPaint.setTextSize(100);
+        mWheelPaint.setAntiAlias(true);
+        canvas.drawPath(mOutsideBorderPath, mWheelPaint);
         canvas.restore();
     }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
-        canvas.save();
-        canvas.translate(mRootDiameter / 2f, mRootDiameter / 2f);
-        canvas.rotate((float) (mSelectedAngle), 0, 0);
-        canvas.drawPath(mTrianglePath, mCursorPaint);
-        canvas.restore();
+        drawArcIndicator(canvas);
         if (mIsDebug) {
             canvas.save();
             canvas.translate(mRootDiameter / 2f, mRootDiameter / 2f);
@@ -600,6 +644,35 @@ public class CursorWheelLayout extends ViewGroup {
             }
             canvas.restore();
         }
+    }
+    //圆弧的角度
+    float mArcIndicatorAngle=30f;
+
+    //画指示器
+    private void drawArcIndicator(Canvas canvas) {
+//        //画三角形
+//        canvas.save();
+//        canvas.translate(mRootDiameter / 2f, mRootDiameter / 2f);
+//        canvas.rotate((float) (mSelectedAngle), 0, 0);
+//        canvas.drawPath(mTrianglePath, mCursorPaint);
+//        canvas.restore();
+
+        canvas.save();
+        //画只是圆弧
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);            //设置画笔为无锯齿
+        paint.setColor(Color.parseColor("#800763A7"));           //设置画笔颜色
+        paint.setStrokeWidth(mOutsideBorderWidth);        //线宽
+        paint.setStyle(Paint.Style.STROKE);       //空心
+        RectF oval = new RectF();
+        float viewWidth = mRootDiameter;
+        float roundWidth = mOutsideBorderWidth / 2;
+        oval.left = 0 + roundWidth;
+        oval.top = 0 + roundWidth;
+        oval.right = viewWidth - roundWidth;
+        oval.bottom = viewWidth - roundWidth;
+        canvas.drawArc(oval, (float)mSelectedAngle-mArcIndicatorAngle/2, mArcIndicatorAngle, false, paint);  //绘制圆弧
+        canvas.restore();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package github.hellocsl.cursorwheellayout.adapter;
 
 import android.content.Context;
-import android.support.v4.app.ActivityCompat;
+import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -48,13 +48,16 @@ public class SimpleTextAdapter extends CursorWheelLayout.CycleWheelAdapter {
         TextView textView = (TextView) root.findViewById(R.id.wheel_menu_item_tv);
         textView.setVisibility(View.VISIBLE);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        textView.setRotation(270);
+        textView.setTextColor(Color.parseColor("#24A1FD"));
         textView.setText(item.mTitle);
         if (textView.getLayoutParams() instanceof FrameLayout.LayoutParams) {
             ((FrameLayout.LayoutParams) textView.getLayoutParams()).gravity = mGravity;
+            ((FrameLayout.LayoutParams) textView.getLayoutParams()).setMargins(5,5,5,5);
         }
-        if (position == INDEX_SPEC) {
-            textView.setTextColor(ActivityCompat.getColor(mContext, R.color.red));
-        }
+//        if (position == INDEX_SPEC) {
+//            textView.setTextColor(ActivityCompat.getColor(mContext, R.color.red));
+//        }
         return root;
     }
 
