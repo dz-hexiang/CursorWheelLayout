@@ -1,8 +1,10 @@
 package github.hellocsl.cursorwheellayout.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.TextView;
 
 import github.hellocsl.cursorwheel.CursorWheelLayout;
 import github.hellocsl.cursorwheellayout.R;
@@ -26,7 +28,8 @@ public class SimpleTextCursorWheelLayout extends CursorWheelLayout {
         if (v == null) {
             return;
         }
-        View tv = v.findViewById(R.id.wheel_menu_item_tv);
+        TextView tv = (TextView) v.findViewById(R.id.wheel_menu_item_tv);
+        tv.setTextColor(Color.parseColor("#f36337"));
         tv.animate().scaleX(1.5f).scaleY(1.5f);
     }
 
@@ -37,7 +40,8 @@ public class SimpleTextCursorWheelLayout extends CursorWheelLayout {
         if (v == null) {
             return;
         }
-        View tv = v.findViewById(R.id.wheel_menu_item_tv);
+        TextView tv = (TextView) v.findViewById(R.id.wheel_menu_item_tv);
+        tv.setTextColor(Color.parseColor("#24A1FD"));
         tv.animate().scaleX(1).scaleY(1);
     }
 

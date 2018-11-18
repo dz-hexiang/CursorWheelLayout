@@ -14,8 +14,8 @@
 
         <github.hellocsl.cursorwheellayout.widget.SimpleTextCursorWheelLayout
             android:id="@+id/test_circle_menu_left"
-            android:layout_width="260dip"
-            android:layout_height="260dip"
+            android:layout_width="280dip"
+            android:layout_height="280dip"
             android:layout_gravity="center"
 
             app:wheelBackgroundColor="#FFFFFF"
@@ -28,17 +28,34 @@
             app:wheelPaddingRadio="0"
             app:wheelSelectedAngle="0">
 
-            <github.hellocsl.cursorwheellayout.widget.SwitchButton
-                android:id="@id/id_wheel_menu_center_item"
+            <github.hellocsl.cursorwheellayout.widget.SuperCircleView
+                android:id="@+id/id_wheel_menu_center_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:boardWidth="0dip"
-                app:uncheckRevealColor="#ff3007" />
+                android:layout_gravity="center"
+                android:rotation="180"
+                app:is_show_select="true"
+                app:min_circle_radio="126"
+                app:ring_color_select="38"
+                app:ring_width="22"
+                app:select="60" />
+
+
+
+
+
+
         </github.hellocsl.cursorwheellayout.widget.SimpleTextCursorWheelLayout>
 
 
     </FrameLayout>
+
+
+
+
+
+
+
 
 
     <github.hellocsl.cursorwheel.CursorWheelLayout
@@ -64,6 +81,9 @@
             android:layout_height="wrap_content"
             app:boardWidth="0dip"
             app:uncheckRevealColor="#ff2a2f36" />
+
+
+
     </github.hellocsl.cursorwheel.CursorWheelLayout>
 
     <github.hellocsl.cursorwheellayout.widget.SimpleTextCursorWheelLayout
